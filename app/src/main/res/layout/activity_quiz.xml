@@ -33,6 +33,12 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/cheat_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cheat_button"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,8 +48,8 @@
             android:id="@+id/prev_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="4dp"
             android:drawableEnd="@drawable/arrow_left"
+            android:drawablePadding="4dp"
             android:drawableRight="@drawable/arrow_left"
             android:text="@string/prev_button"/>
 
@@ -51,8 +57,8 @@
             android:id="@+id/next_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="4dp"
             android:drawableEnd="@drawable/arrow_right"
+            android:drawablePadding="4dp"
             android:drawableRight="@drawable/arrow_right"
             android:text="@string/next_button"/>
     </LinearLayout>
