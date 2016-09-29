@@ -1,11 +1,14 @@
 package com.bignerdranch.android.geoquiz;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -34,6 +37,10 @@ public class CheatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
 
+        TextView apiLevelTextView = (TextView) findViewById(R.id.api_level_text_view);
+        apiLevelTextView.setText(getResources().getString(R.string.api_level_text) + " "
+                + String.valueOf(Build.VERSION.SDK_INT));
+
         if (savedInstanceState != null) {
             mIsAnswerShown = savedInstanceState.getBoolean(EXTRA_ANSWER_SHOWN, false);
             setAnswerShownResult(mIsAnswerShown);
@@ -42,18 +49,22 @@ public class CheatActivity extends AppCompatActivity {
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
 
         mAnswerTextView = (TextView) findViewById(R.id.answer_text_view);
-        if (mIsAnswerShown) {
-            updateAnswer();
-        }
 
         mShowAnswer = (Button) findViewById(R.id.show_answer_button);
         mShowAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateAnswer();
+                animateAnswer();
                 setAnswerShownResult(true);
             }
         });
+
+        if (mIsAnswerShown) {
+            updateAnswer();
+            mShowAnswer.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     private void updateAnswer() {
@@ -64,10 +75,29 @@ public class CheatActivity extends AppCompatActivity {
         }
     }
 
+    private void animateAnswer() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int cx = mShowAnswer.getWidth() / 2;
+            int cy = mShowAnswer.getHeight() / 2;
+            float radius = mShowAnswer.getWidth();
+            Animator anim = ViewAnimationUtils.createCircularReveal(mShowAnswer, cx, cy, radius, 0);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    mShowAnswer.setVisibility(View.INVISIBLE);
+                }
+            });
+            anim.start();
+        } else {
+            mShowAnswer.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private void setAnswerShownResult(boolean isAnswerShown) {
         Intent resultData = new Intent().putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
         setResult(RESULT_OK, resultData);
-        mIsAnswerShown = true;
+        mIsAnswerShown = isAnswerShown;
     }
 
     @Override
