@@ -1,2 +1,3 @@
-# GeoQuiz. Android app
+# GeoQuiz
+## Android app
  Bignerdranch training
